@@ -3,10 +3,21 @@ import { Inter } from 'next/font/google';
 
 import Header from '@/components/Header.component';
 import TaskGenerator from '@/components/TaskGenerator.component';
+import { useState, SyntheticEvent } from 'react';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export default function Home() {
+  const [inputTodo, setInputTodo] = useState('');
+
+  const onSubmitGenerate = async (event: SyntheticEvent) => {
+    event.preventDefault();
+
+    if (inputTodo) {
+      //
+    }
+  };
+
   return (
     <div className="flex max-w-6xl mx-auto flex-col items-center justify-center py-2 min-h-screen">
       <Head>
@@ -26,7 +37,10 @@ export default function Home() {
             lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat
             fugiat aliqua.
           </p>
-          <TaskGenerator />
+          <TaskGenerator
+            setInputTodo={setInputTodo}
+            onSubmitGenerate={onSubmitGenerate}
+          />
         </div>
       </main>
     </div>

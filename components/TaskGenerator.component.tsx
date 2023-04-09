@@ -1,27 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, SyntheticEvent } from 'react';
 
-export default function TaskGenerator() {
-  const [inputTodo, setInputTodo] = useState('');
-
-  const onSubmit = (event: SubmitEvent) => {
-    event.preventDefault();
-
-    if (inputTodo) {
-      //
-    }
-  };
-
+interface TaskGeneratorProps {
+  setInputTodo: (_: string) => void;
+  onSubmitGenerate: (event: SyntheticEvent) => void;
+}
+const TaskGenerator = ({
+  setInputTodo,
+  onSubmitGenerate,
+}: TaskGeneratorProps) => {
   return (
     <div className="mt-10 items-center justify-center w-full">
-      <form>
+      <form onSubmit={onSubmitGenerate}>
         <label
           htmlFor="input-todo"
           className="mb-2 text-sm font-medium text-gray-900 w-full"
         >
           Input what you want to get done today
         </label>
+
         <div className="flex justify-between">
           <input
+            type="text"
             id="input-todo"
             className="p-2.5 w-full mr-2 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
             onChange={(event) => setInputTodo(event.target.value.trim())}
@@ -36,4 +35,6 @@ export default function TaskGenerator() {
       </form>
     </div>
   );
-}
+};
+
+export default TaskGenerator;
