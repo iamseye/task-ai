@@ -5,15 +5,15 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Response>
 ) {
-  const { prompt } = req.query as {
+  const { prompt } = req.body as {
     prompt?: string;
   };
 
   if (!prompt) {
-    throw new Error('prompt is required');
+    return new Response('No prompt in the request', { status: 400 });
   }
 
-  const requestParameters = openAiRequest(prompt);
+  const requestParameters = openAiRequest(prompt.trim());
 
   const response = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
@@ -34,5 +34,6 @@ export default async function handler(
 
   const data = await response?.json();
 
+  console.log(JSON.stringify(data));
   res.status(200).json(data.choices?.[0]?.message?.content ?? '');
 }

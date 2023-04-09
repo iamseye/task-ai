@@ -1,6 +1,5 @@
 const defaultQuestionTemplate = (task: string) =>
-  `breakdown the tasks of ${task} and clearly labeled "1." and "2."., at most breakdown to 5 items`;
-
+  `what are the first 3 small milestones to start ${task} with clear goals and measurable targets and labelled with bullet points`;
 export const openAiRequest = (prompt: string) => ({
   model: 'gpt-3.5-turbo',
   messages: [{ role: 'user', content: defaultQuestionTemplate(prompt) }],

@@ -14,7 +14,22 @@ export default function Home() {
     event.preventDefault();
 
     if (inputTodo) {
-      //
+      const response = await fetch('/api/generateTasks', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt: inputTodo,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      const data = await response.json();
+      console.log(data);
     }
   };
 
