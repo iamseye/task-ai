@@ -4,11 +4,18 @@ import { Inter } from 'next/font/google';
 import Header from '@/components/Header.component';
 import TaskGenerator from '@/components/TaskGenerator.component';
 import { useState, SyntheticEvent } from 'react';
+import TextCard from '@/components/TextCard.component';
+import { getMilestonesAndEncouragement } from '@/utils/openAI';
+import Quote from '@/components/Quote.component';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export default function Home() {
   const [inputTodo, setInputTodo] = useState('');
+  const [isLoading, setLoading] = useState(false);
+  const [generatedMilestones, setGeneratedMilestones] = useState<string[]>([]);
+  const [generatedEncouragement, setGeneratedEncouragement] =
+    useState<string>('');
 
   const onSubmitGenerate = async (event: SyntheticEvent) => {
     event.preventDefault();
@@ -29,7 +36,9 @@ export default function Home() {
       }
 
       const data = await response.json();
-      console.log(data);
+      const { milestones, encouragement } = getMilestonesAndEncouragement(data);
+      setGeneratedMilestones(milestones);
+      setGeneratedEncouragement(encouragement);
     }
   };
 
@@ -56,6 +65,18 @@ export default function Home() {
             setInputTodo={setInputTodo}
             onSubmitGenerate={onSubmitGenerate}
           />
+          {generatedMilestones.map(
+            (milestone, index) =>
+              milestone.length && (
+                <TextCard
+                  key={milestone}
+                  title={`Milestone ${index + 1}`}
+                  text={milestone}
+                />
+              )
+          )}
+
+          {generatedEncouragement && <Quote text={generatedEncouragement} />}
         </div>
       </main>
     </div>
