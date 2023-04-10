@@ -18,6 +18,7 @@ export default function Home() {
     useState<string>('');
 
   const onSubmitGenerate = async (event: SyntheticEvent) => {
+    setLoading(true);
     event.preventDefault();
 
     if (inputTodo) {
@@ -39,6 +40,7 @@ export default function Home() {
       const { milestones, encouragement } = getMilestonesAndEncouragement(data);
       setGeneratedMilestones(milestones);
       setGeneratedEncouragement(encouragement);
+      setLoading(false);
     }
   };
 
@@ -62,21 +64,29 @@ export default function Home() {
             fugiat aliqua.
           </p>
           <TaskGenerator
+            isLoading={isLoading}
             setInputTodo={setInputTodo}
             onSubmitGenerate={onSubmitGenerate}
           />
-          {generatedMilestones.map(
-            (milestone, index) =>
-              milestone.length && (
-                <TextCard
-                  key={milestone}
-                  title={`Milestone ${index + 1}`}
-                  text={milestone}
-                />
-              )
-          )}
 
-          {generatedEncouragement && <Quote text={generatedEncouragement} />}
+          {!isLoading && (
+            <>
+              {generatedMilestones.map(
+                (milestone, index) =>
+                  milestone.length && (
+                    <TextCard
+                      key={milestone}
+                      title={`Milestone ${index + 1}`}
+                      text={milestone}
+                    />
+                  )
+              )}
+
+              {generatedEncouragement && (
+                <Quote text={generatedEncouragement} />
+              )}
+            </>
+          )}
         </div>
       </main>
     </div>
