@@ -1,16 +1,16 @@
 import React, { useState, SyntheticEvent } from 'react';
 import { DotLoader } from './DotLoader.component';
 
-interface TaskGeneratorProps {
+interface GoalInputFormProps {
   isLoading: boolean;
   setInputGoal: (_: string) => void;
   onSubmitGenerate: (event: SyntheticEvent) => void;
 }
-const TaskGenerator = ({
+const GoalInputForm = ({
   isLoading,
   setInputGoal,
   onSubmitGenerate,
-}: TaskGeneratorProps) => {
+}: GoalInputFormProps) => {
   return (
     <div className="mt-10 items-center justify-center w-full">
       <form onSubmit={onSubmitGenerate}>
@@ -41,4 +41,4 @@ const TaskGenerator = ({
   );
 };
 
-export default TaskGenerator;
+export default GoalInputForm;
