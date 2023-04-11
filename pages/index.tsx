@@ -11,7 +11,7 @@ import Quote from '@/components/Quote.component';
 const inter = Inter({ subsets: ['latin'] });
 
 export default function Home() {
-  const [inputTodo, setInputTodo] = useState('');
+  const [inputGoal, setInputGoal] = useState('');
   const [isLoading, setLoading] = useState(false);
   const [generatedMilestones, setGeneratedMilestones] = useState<string[]>([]);
   const [generatedEncouragement, setGeneratedEncouragement] =
@@ -21,14 +21,14 @@ export default function Home() {
     setLoading(true);
     event.preventDefault();
 
-    if (inputTodo) {
-      const response = await fetch('/api/generateTasks', {
+    if (inputGoal) {
+      const response = await fetch('/api/generateMilestones', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          prompt: inputTodo,
+          prompt: inputGoal,
         }),
       });
 
@@ -56,16 +56,11 @@ export default function Home() {
       <main className="flex flex-col align-middle p-24 min-h-screen">
         <div>
           <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-            Breakdown your tasks, for real
+            Build actionable milestones to achieve your goals
           </h1>
-          <p className="mt-6 text-lg leading-8 text-gray-600">
-            Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui
-            lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat
-            fugiat aliqua.
-          </p>
           <TaskGenerator
             isLoading={isLoading}
-            setInputTodo={setInputTodo}
+            setInputGoal={setInputGoal}
             onSubmitGenerate={onSubmitGenerate}
           />
 

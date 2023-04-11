@@ -3,12 +3,12 @@ import { DotLoader } from './DotLoader.component';
 
 interface TaskGeneratorProps {
   isLoading: boolean;
-  setInputTodo: (_: string) => void;
+  setInputGoal: (_: string) => void;
   onSubmitGenerate: (event: SyntheticEvent) => void;
 }
 const TaskGenerator = ({
   isLoading,
-  setInputTodo,
+  setInputGoal,
   onSubmitGenerate,
 }: TaskGeneratorProps) => {
   return (
@@ -16,23 +16,24 @@ const TaskGenerator = ({
       <form onSubmit={onSubmitGenerate}>
         <label
           htmlFor="input-todo"
-          className="mb-2 text-sm font-medium text-gray-900 w-full"
+          className="mb-2 text-lg font-medium text-gray-600 w-full"
         >
-          Input what you want to get done today
+          Write down what you want to achieve and your specific situation
         </label>
 
-        <div className="flex justify-between">
-          <input
-            type="text"
+        <div className="flex flex-col">
+          <textarea
             id="input-todo"
-            className="p-2.5 w-full mr-2 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-            onChange={(event) => setInputTodo(event.target.value.trim())}
-          ></input>
+            rows={4}
+            className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="I never make videos before but I want to be a profitable Youtuber... I'm into the topic of travel, software development and food"
+            onChange={(event) => setInputGoal(event.target.value.trim())}
+          ></textarea>
           <button
             type="submit"
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5"
+            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mt-5"
           >
-            {isLoading ? <DotLoader /> : 'Generate tasks'}
+            {isLoading ? <DotLoader /> : 'Generate milestones'}
           </button>
         </div>
       </form>

@@ -1,8 +1,9 @@
 const ENCOURAGE_FORMAT = 'Encouragement:';
+const DEFAULT_MILESTONES_NUM = 3;
 
 const defaultQuestionTemplate = (task: string) =>
-  `what are the first 3 small milestones to start ${task} with clear goals and measurable(number) and actionable targets and in the end write a short encouragement after text '${ENCOURAGE_FORMAT}'
-  make sure to list every milestones with the formate: 'Milestone 1:', 'Milestone 2:', 'Milestone 3:'...etc and make sure to have concrete and measurable action to follow`;
+  `what are the first ${DEFAULT_MILESTONES_NUM} small milestones to start ${task} with clear goals and actionable targets and in the end write a short encouragement after text '${ENCOURAGE_FORMAT}'
+  make sure to list every milestones with the formate: 'Milestone 1:', 'Milestone 2:', 'Milestone 3:'...etc and make sure to have concrete and measurable action to follow, each milestones have limited 100 length`;
 
 export const openAiRequest = (prompt: string) => ({
   model: 'gpt-3.5-turbo',
