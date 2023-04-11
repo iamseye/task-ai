@@ -54,6 +54,7 @@ export const getMilestonesAndEncouragement = (
 };
 
 export const OpenAIStream = async (prompt: string) => {
+  console.log(prompt);
   const payload = getOpenAIStreamPayload(prompt);
   const encoder = new TextEncoder();
   const decoder = new TextDecoder();

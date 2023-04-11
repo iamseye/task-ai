@@ -2,7 +2,7 @@ import Head from 'next/head';
 import { Inter } from 'next/font/google';
 
 import Header from '@/components/Header.component';
-import TaskGenerator from '@/components/TaskGenerator.component';
+import GoalInputForm from '@/components/GoalInputForm.component';
 import { useState, SyntheticEvent } from 'react';
 import TextCard from '@/components/TextCard.component';
 import { getMilestonesAndEncouragement } from '@/utils/openAI';
@@ -13,13 +13,15 @@ const inter = Inter({ subsets: ['latin'] });
 export default function Home() {
   const [inputGoal, setInputGoal] = useState('');
   const [isLoading, setLoading] = useState(false);
+  const [generatedAIResponse, setGeneratedAIResponse] = useState('');
   const [generatedMilestones, setGeneratedMilestones] = useState<string[]>([]);
   const [generatedEncouragement, setGeneratedEncouragement] =
     useState<string>('');
 
   const onSubmitGenerate = async (event: SyntheticEvent) => {
-    setLoading(true);
     event.preventDefault();
+    setLoading(true);
+    setGeneratedAIResponse('');
 
     if (inputGoal) {
       const response = await fetch('/api/generateMilestones', {
@@ -32,14 +34,34 @@ export default function Home() {
         }),
       });
 
+      console.log('edge function return', response);
+
       if (!response.ok) {
         throw new Error(response.statusText);
       }
 
-      const data = await response.json();
-      const { milestones, encouragement } = getMilestonesAndEncouragement(data);
-      setGeneratedMilestones(milestones);
-      setGeneratedEncouragement(encouragement);
+      try {
+        //readable stream
+        const data = response.body;
+        if (!data) {
+          return;
+        }
+
+        const reader = data.getReader();
+        const decoder = new TextDecoder();
+        let done = false;
+
+        while (!done) {
+          const { value, done: doneReading } = await reader.read();
+          console.log('client', value);
+          done = doneReading;
+          const chunkValue = decoder.decode(value);
+          setGeneratedAIResponse((prev) => prev + chunkValue);
+        }
+      } catch (err) {
+        console.log('Looks like OpenAI timed out :(', err);
+      }
+
       setLoading(false);
     }
   };
@@ -58,7 +80,7 @@ export default function Home() {
           <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
             Build actionable milestones to achieve your goals
           </h1>
-          <TaskGenerator
+          <GoalInputForm
             isLoading={isLoading}
             setInputGoal={setInputGoal}
             onSubmitGenerate={onSubmitGenerate}

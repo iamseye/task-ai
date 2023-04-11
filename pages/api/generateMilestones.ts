@@ -1,12 +1,11 @@
 import { OpenAIStream } from '@/utils/openAI';
-import { response } from 'express';
-import type { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Response>
-) {
-  const { prompt } = req.body as {
+export const config = {
+  runtime: 'edge',
+};
+
+export const handler = async (req: Request, res: Response) => {
+  const { prompt } = (await req.json()) as {
     prompt?: string;
   };
 
@@ -20,6 +19,8 @@ export default async function handler(
     return new Response(stream);
   } catch (error) {
     console.error('generatedMilestones Error:', error);
-    res.status(500).json(error as any);
+    return new Response(`generatedMilestones Error: ${error}`, { status: 500 });
   }
-}
+};
+
+export default handler;
