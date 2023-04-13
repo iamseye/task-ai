@@ -1,12 +1,12 @@
 import Head from 'next/head';
 import { Inter } from 'next/font/google';
+import { useState, SyntheticEvent } from 'react';
 
 import Header from '@/components/Header.component';
 import GoalInputForm from '@/components/GoalInputForm.component';
-import { useState, SyntheticEvent } from 'react';
 import TextCard from '@/components/TextCard.component';
-import { getMilestonesAndEncouragement } from '@/utils/openAI';
 import Quote from '@/components/Quote.component';
+import { ENCOURAGE_FORMAT } from '@/utils/openAI';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -14,9 +14,6 @@ export default function Home() {
   const [inputGoal, setInputGoal] = useState('');
   const [isLoading, setLoading] = useState(false);
   const [generatedAIResponse, setGeneratedAIResponse] = useState('');
-  const [generatedMilestones, setGeneratedMilestones] = useState<string[]>([]);
-  const [generatedEncouragement, setGeneratedEncouragement] =
-    useState<string>('');
 
   const onSubmitGenerate = async (event: SyntheticEvent) => {
     event.preventDefault();
@@ -33,8 +30,6 @@ export default function Home() {
           prompt: inputGoal,
         }),
       });
-
-      console.log('edge function return', response);
 
       if (!response.ok) {
         throw new Error(response.statusText);
@@ -53,9 +48,9 @@ export default function Home() {
 
         while (!done) {
           const { value, done: doneReading } = await reader.read();
-          console.log('client', value);
           done = doneReading;
           const chunkValue = decoder.decode(value);
+
           setGeneratedAIResponse((prev) => prev + chunkValue);
         }
       } catch (err) {
@@ -86,24 +81,21 @@ export default function Home() {
             onSubmitGenerate={onSubmitGenerate}
           />
 
-          {!isLoading && (
-            <>
-              {generatedMilestones.map(
-                (milestone, index) =>
-                  milestone.length && (
-                    <TextCard
-                      key={milestone}
-                      title={`Milestone ${index + 1}`}
-                      text={milestone}
-                    />
-                  )
-              )}
-
-              {generatedEncouragement && (
-                <Quote text={generatedEncouragement} />
-              )}
-            </>
-          )}
+          {generatedAIResponse?.split('\n\n').map((line) => {
+            const match = line.match(/\d\.\s*(.*?):\s*(.*)/);
+            if (match) {
+              const [, title, description] = match;
+              return <TextCard key={title} title={title} text={description} />;
+            } else {
+              const match = line.match(
+                new RegExp(`${ENCOURAGE_FORMAT}\\s*(.*)`)
+              );
+              if (match) {
+                const [, description] = match;
+                return <Quote text={description} />;
+              }
+            }
+          })}
         </div>
       </main>
     </div>

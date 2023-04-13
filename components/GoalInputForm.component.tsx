@@ -12,7 +12,7 @@ const GoalInputForm = ({
   onSubmitGenerate,
 }: GoalInputFormProps) => {
   return (
-    <div className="mt-10 items-center justify-center w-full">
+    <div className="mt-10 mb-10 items-center justify-center w-full">
       <form onSubmit={onSubmitGenerate}>
         <label
           htmlFor="input-todo"

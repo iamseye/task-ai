@@ -4,13 +4,8 @@ import {
   ReconnectInterval,
 } from 'eventsource-parser';
 
-const ENCOURAGE_FORMAT = 'Encouragement:';
+export const ENCOURAGE_FORMAT = 'Encouragement:';
 const DEFAULT_MILESTONES_NUM = 3;
-
-interface getMilestonesAndEncouragement {
-  milestones: { title: string; description: string }[];
-  encouragement: string;
-}
 
 interface ChatGPTMessage {
   role: 'user' | 'assistant' | 'system';
@@ -43,15 +38,6 @@ const getOpenAIStreamPayload = (prompt: string): OpenAIStreamPayload => ({
   stream: true,
   n: 1,
 });
-
-export const getMilestonesAndEncouragement = (
-  text: string
-): getMilestonesAndEncouragement => {
-  return {
-    milestones: [],
-    encouragement: '',
-  };
-};
 
 export const OpenAIStream = async (prompt: string) => {
   console.log(prompt);
