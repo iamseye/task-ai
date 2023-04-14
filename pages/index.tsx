@@ -1,12 +1,13 @@
 import Head from 'next/head';
 import { Inter } from 'next/font/google';
-import { useState, SyntheticEvent } from 'react';
+import { useState, SyntheticEvent, useRef } from 'react';
 
 import Header from '@/components/Header.component';
 import GoalInputForm from '@/components/GoalInputForm.component';
 import TextCard from '@/components/TextCard.component';
 import Quote from '@/components/Quote.component';
 import { ENCOURAGE_FORMAT } from '@/utils/openAI';
+import { useScrollToView } from '@/utils/hooks';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -14,6 +15,8 @@ export default function Home() {
   const [inputGoal, setInputGoal] = useState('');
   const [isLoading, setLoading] = useState(false);
   const [generatedAIResponse, setGeneratedAIResponse] = useState('');
+
+  const ref = useScrollToView();
 
   const onSubmitGenerate = async (event: SyntheticEvent) => {
     event.preventDefault();
@@ -81,21 +84,27 @@ export default function Home() {
             onSubmitGenerate={onSubmitGenerate}
           />
 
-          {generatedAIResponse?.split('\n\n').map((line) => {
-            const match = line.match(/\d\.\s*(.*?):\s*(.*)/);
-            if (match) {
-              const [, title, description] = match;
-              return <TextCard key={title} title={title} text={description} />;
-            } else {
-              const match = line.match(
-                new RegExp(`${ENCOURAGE_FORMAT}\\s*(.*)`)
-              );
-              if (match) {
-                const [, description] = match;
-                return <Quote text={description} />;
-              }
-            }
-          })}
+          {generatedAIResponse && (
+            <div ref={ref}>
+              {generatedAIResponse?.split('\n\n').map((line) => {
+                const match = line.match(/\d\.\s*(.*?):\s*(.*)/);
+                if (match) {
+                  const [, title, description] = match;
+                  return (
+                    <TextCard key={title} title={title} text={description} />
+                  );
+                } else {
+                  const match = line.match(
+                    new RegExp(`${ENCOURAGE_FORMAT}\\s*(.*)`)
+                  );
+                  if (match) {
+                    const [, description] = match;
+                    return <Quote key={description} text={description} />;
+                  }
+                }
+              })}
+            </div>
+          )}
         </div>
       </main>
     </div>
