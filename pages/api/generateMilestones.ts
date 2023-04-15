@@ -1,4 +1,4 @@
-import { OpenAIStream } from '../../utils/openAI';
+import { OpenAIStream } from '../../utils/open-ai';
 
 export const config = {
   runtime: 'edge',

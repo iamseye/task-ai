@@ -6,7 +6,7 @@ import Header from '@/components/Header.component';
 import GoalInputForm from '@/components/GoalInputForm.component';
 import TextCard from '@/components/TextCard.component';
 import Quote from '@/components/Quote.component';
-import { ENCOURAGE_FORMAT } from '@/utils/openAI';
+import { ENCOURAGE_FORMAT } from '@/utils/open-ai';
 import { useScrollToView } from '@/utils/hooks';
 
 const inter = Inter({ subsets: ['latin'] });
